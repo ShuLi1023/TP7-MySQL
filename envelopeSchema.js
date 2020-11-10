@@ -21,7 +21,7 @@ export const envelopeSchema = new EntitySchema({
         },
         idStack: {
             type: 'int',
-            nullable: false
+            nullable: true
         }
     }
 })
