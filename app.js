@@ -13,15 +13,13 @@ app.use(function (_req, res, next) {
     next()
 })
 
-app.get('/digitize',async (req, res) => {
+app.get('/digitize', async (req, res) => {
 
-    const gender = req.query.gender
-    const name = req.query.name
-    const age = req.query.age
+    const { gender, name, age } = req.params
     const weiclinic = new WeiClinic()
     const createdElements = await weiclinic.create(gender, name, age)
 
-    res.status(200).set({ 'Content-Type': 'application/json' }).json(createdElements)
+    res.status(200).set( 'Content-Type', 'application/json').json(createdElements)
 })
 
 app.post('/remove/:stackId', (req, res) => {
