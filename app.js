@@ -1,7 +1,7 @@
 import express from 'express'
 import bodyParser from 'body-parser'
 
-import {getClinic} from './weiClinic'
+import WeiClinic from './weiClinic'
 
 const app = express()
 
@@ -13,13 +13,13 @@ app.use(function (_req, res, next) {
     next()
 })
 
-app.get('/digitize', (req, res) => {
+app.get('/digitize',async (req, res) => {
 
     const gender = req.query.gender
     const name = req.query.name
     const age = req.query.age
-
-    const createdElements = getClinic().create(gender, name, age)
+    const weiclinic = new WeiClinic()
+    const createdElements = await weiclinic.create(gender, name, age)
 
     res.status(200).set({ 'Content-Type': 'application/json' }).json(createdElements)
 })
