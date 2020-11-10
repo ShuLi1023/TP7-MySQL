@@ -2,7 +2,7 @@ import CorticalStack from './corticalStack'
 import { EntitySchema } from 'typeorm'
 
 export const envelopeSchema = new EntitySchema({
-    tableName: 'table_stack',
+    tableName: 'CorticalStacks',
     name: 'corticalStackData',
     target: CorticalStack,
     columns:{

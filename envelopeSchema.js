@@ -2,7 +2,7 @@ import Envelope from './Envelope'
 import { EntitySchema } from 'typeorm'
 
 export const envelopeSchema = new EntitySchema({
-    tableName: 'table_envelope',
+    tableName: 'Envelopes',
     name: 'envelopeData',
     target: Envelope,
     columns:{
