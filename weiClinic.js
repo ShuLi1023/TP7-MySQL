@@ -24,15 +24,22 @@ class WeiClinic {
        try {
            const newEnvelope = new Envelope(realGender, age)
            const newCorticalStack = new CorticalStack(realGender, name, age)
-           const [result1] = await connection.query(
+           const [addNewEnvelope] = await connection.query(
             `INSERT INTO Envelopes (gender, age) VALUES ('${realGender}', '${age}')`
            )
-           const [result2] = await connection.query(
+           const [addNewCorticalStack] = await connection.query(
             `INSERT INTO CorticalStacks (realGender, name, age) VALUES ('${realGender}', '${name}', '${age}')`
            )
 
-           newEnvelope.id = result1.insertId
-           newCorticalStack.id = result2.insertId
+           newEnvelope.id = addNewEnvelope.insertId
+           newCorticalStack.id = addNewCorticalStack.insertId
+
+           await connection.query(
+            `UPDATE Envelopes SET idStack='${newCorticalStack.id}' WHERE id='${newEnvelope.id}'`
+           )
+           await connection.query(
+            `UPDATE CorticalStacks SET idEnvelope='${newEnvelope.id}' WHERE id='${newCorticalStack.id}'`
+           )
            newEnvelope.idStack = newCorticalStack.id
            newCorticalStack.idEnvelope = newEnvelope.id
            return [newEnvelope , newCorticalStack]
