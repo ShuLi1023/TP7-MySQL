@@ -26,12 +26,12 @@ app.get('/digitize', async (req, res) => {
     res.status(200).set( 'Content-Type', 'application/json').json(createdElements)
 })
 
-app.get('/find/:id', async (req, res) => {
-    const id = parseInt(req.params.id)
+app.get('/find/:stackId', async (req, res) => {
+    const stackId = parseInt(req.params.stackId)
 
     const weiClinic = new WeiClinic()
 
-    const data = await weiClinic.getData(id)
+    const data = await weiClinic.getData(stackId)
 
     res.status(200).set( 'Content-Type', 'application/json').json(data)
 

@@ -36,10 +36,11 @@ class WeiClinic {
 
     }
 
-    async getData(id){
+    async getData(stackId){
         const dal = new TypeOrmDal()
-        const envelope = await dal.getEnvelopeData(id)
-        const stack = await dal.getCorticalStackData(id)
+        const stack = await dal.getCorticalStackData(stackId)
+        const envelope = await dal.getEnvelopeData(stack.idEnvelope)
+
         return {
             corticalStack: stack,
             envelope: envelope
