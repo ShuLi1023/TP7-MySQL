@@ -1,8 +1,5 @@
 import express from 'express'
 import bodyParser from 'body-parser'
-
-import WeiClinic from './weiClinic'
-import TypeOrmWeiClinic from './typeOrmWeiClinic'
 import TypeOrmDal from './typeOrmDal'
 
 const app = express()
@@ -21,7 +18,7 @@ app.get('/digitize', async (req, res) => {
     //const weiclinic = new TypeOrmWeiClinic()
     //const createdElements = await weiclinic.create(gender, name, age)
 
-    const weiclinic = new WeiClinic()
+    const weiclinic = new TypeOrmDal()
     const createdElements = await weiclinic.create(gender, name, age)
 
     res.status(200).set( 'Content-Type', 'application/json').json(createdElements)
@@ -30,7 +27,7 @@ app.get('/digitize', async (req, res) => {
 app.get('/find/:stackId', async (req, res) => {
     const stackId = parseInt(req.params.stackId)
 
-    const weiClinic = new WeiClinic()
+    const weiClinic = new TypeOrmDal()
 
     const data = await weiClinic.getData(stackId)
 
@@ -41,7 +38,7 @@ app.get('/find/:stackId', async (req, res) => {
 app.post('/remove/:stackId', async (req, res) => {
     const stackId = parseInt(req.params.stackId)
 
-    const weiClinic = new WeiClinic()
+    const weiClinic = new TypeOrmDal()
     const status = await weiClinic.removeStackFromEnvelope(stackId)
 
     res.status(status).end()
@@ -73,7 +70,7 @@ app.put('/implant/:stackId/:envelopeId?', async (req, res) => {
 app.post('/kill/:envelopeId', async (req, res) => {
     const envelopeId = parseInt(req.params.envelopeId)
 
-    const weiClinic = new WeiClinic()
+    const weiClinic = new TypeOrmDal()
     const status = await weiClinic.killEnvelope(envelopeId)
 
     res.status(status).end()

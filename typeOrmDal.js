@@ -119,9 +119,9 @@ async removeStackFromEnvelope(stackId){
       const envelopeRepository = connection.getRepository(Envelope)
 
       const stack = await stackRepository.findOne({id: stackId})
-      console.log("Stack found = " + stack.name)
+      console.log("Stack found = " + stack)
 
-      if(stack.idEnvelope != null){
+      if(stack && stack.idEnvelope != null){
         //const stack = await stackRepository.findOne({id: stackId})
         //console.log("Stack found = " + stack.name)
 
