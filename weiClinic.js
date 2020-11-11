@@ -1,5 +1,5 @@
 import CorticalStack from './corticalStack'
-import Envelope from './Envelope'
+import Envelope from './envelope'
 
 import TypeOrmDal from './typeOrmDal'
 import mysql from 'mysql2/promise'

@@ -1,9 +1,9 @@
 import { createConnection } from 'typeorm'
 import CorticalStack from './corticalStack'
-import Envelope from './Envelope'
+import Envelope from './envelope'
 
 import { envelopeSchema } from './envelopeSchema'
-import { corticalStackSchema } from './corticalStackSchema'
+import { stackSchema } from './corticalStackSchema'
 
 class TypeOrmDal {
   async connect() {
@@ -15,7 +15,7 @@ class TypeOrmDal {
         username: 'root',
         password: 'root',
         database: 'db_alteredCarbon',
-        entities: [envelopeSchema, corticalStackSchema]
+        entities: [envelopeSchema, stackSchema]
       })
     } catch (err) {
       console.error('Unable to connect')

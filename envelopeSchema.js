@@ -1,4 +1,4 @@
-import Envelope from './Envelope'
+import Envelope from './envelope'
 import { EntitySchema } from 'typeorm'
 
 export const envelopeSchema = new EntitySchema({

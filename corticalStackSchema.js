@@ -1,7 +1,7 @@
 import CorticalStack from './corticalStack'
 import { EntitySchema } from 'typeorm'
 
-export const envelopeSchema = new EntitySchema({
+export const stackSchema = new EntitySchema({
     tableName: 'CorticalStacks',
     name: 'corticalStackData',
     target: CorticalStack,
@@ -23,7 +23,7 @@ export const envelopeSchema = new EntitySchema({
             type: 'int',
             nullable: false
         },
-        idStack: {
+        idEnvelope: {
             type: 'int',
             nullable: true
         }
