@@ -49,7 +49,6 @@ class TypeOrmDal {
   async create(gender, name, age) {
     const connection = await this.connect()
 
-
     try {
 
       const envelopeRepository = connection.getRepository(Envelope)
@@ -110,41 +109,26 @@ class TypeOrmDal {
     }
 }
 
-async removeStackFromEnvelope(id){
+async removeStackFromEnvelope(stackId){
   const connection = await this.connect()
 
-    try {
+  console.log("Given Id = " + stackId)
 
-      const stack = await this.getCorticalStackData(id)
-      const envelope = await this.getEnvelopeData(stack.idEnvelope)
-      console.log("Stack DATA FOUND! " + stack.name)
-      //const stack = this.getCorticalStackData(id)
+    try {
+        const stackRepository = connection.getRepository(CorticalStack)
+        const envelopeRepository = connection.getRepository(Envelope)
+
+        const stack = await stackRepository.findOne({id: stackId})
+        console.log("Stack found = " + stack.name)
 
       if(stack){
+        //const stack = await stackRepository.findOne({id: stackId})
+        //console.log("Stack found = " + stack.name)
 
-        const connection = await this.connect()
+        await stackRepository.update(stackId, { idEnvelope: null });
+        await envelopeRepository.update(stack.idEnvelope,{idStack : null})
+        console.log("Stack and Envelope updated")
 
-        const envelopeRepository = connection.getRepository(Envelope)
-        const stackRepository = connection.getRepository(CorticalStack)
-        //const newEnvelope = new Envelope(null, gender, age, null)
-        //const newCorticalStack = new CorticalStack(null, gender, name, age, null)
-
-        //await envelopeRepository.insert(newEnvelope)
-        //await stackRepository.insert(newCorticalStack)
-        //const env = await envelopeRepository.findOne({select:['id'],order: {id:"DESC"}})
-        //const stack = await stackRepository.findOne({select:['id'],order: {id:"DESC"}})
-        await stackRepository.update(stack.id,{idEnvelope : envelope.id})
-        await envelopeRepository.update(envelope.id,{idStack : stack.id})
-
-
-        /*
-        await getConnection
-        .createQueryBuilder()
-        .update(Envelope)
-        .set({ idStack: null})
-        .where("id = :id", { id: id })
-        .execute()
-        */
         return 204
       }else{
         return 400

@@ -16,7 +16,6 @@ class WeiClinic {
        
     }
 
-
     async removeStackFromEnvelope(idStack) {
         const dal = new TypeOrmDal()
         const status = await dal.removeStackFromEnvelope(idStack)
