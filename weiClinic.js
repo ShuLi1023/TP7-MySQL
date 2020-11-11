@@ -28,8 +28,8 @@ class WeiClinic {
 
     }
 
-    destroyStack(idStack) {
-
+    async destroyStack(idStack) {
+        
     }
 
     async getData(stackId){

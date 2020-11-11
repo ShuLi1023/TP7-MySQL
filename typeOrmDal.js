@@ -141,6 +141,37 @@ async removeStackFromEnvelope(stackId){
     }
 }
 
+
+async destroyStack(idStack) {
+  const connection = await this.connect()
+
+  try {
+    const stackRepository = connection.getRepository(CorticalStack)
+    const envelopeRepository = connection.getRepository(Envelope)
+
+    const stack = await stackRepository.findOne({id : idStack})
+    console.log("Stack found = " + stack)
+
+  if(stack){
+    await stackRepository.delete({id: idStack });
+    if(stack.idEnvelope !==  null){
+      await envelopeRepository.delete({id : stack.idEnvelope})
+    }
+    console.log("Stack and Envelope destroied")
+
+    return 204
+  }else{
+    return 400
+  }
+} catch (err) {
+  console.error(err.message)
+  throw err
+} finally {
+  await connection.close()
+}
+
+}
+
 }
 
 export default TypeOrmDal

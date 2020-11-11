@@ -3,6 +3,7 @@ import bodyParser from 'body-parser'
 
 import WeiClinic from './weiClinic'
 import TypeOrmWeiClinic from './typeOrmWeiClinic'
+import TypeOrmDal from './typeOrmDal'
 
 const app = express()
 
@@ -85,14 +86,11 @@ app.post('/kill/:envelopeId', async (req, res) => {
 app.delete('/truedeath/:stackId', async (req, res) => {
 
     const stackId = parseInt(req.params.stackId)
-    const result = getClinic().destroyStack(stackId)
+    const dal = new TypeOrmDal()
+    const status = await dal.destroyStack(stackId)
 
-    if(result){
-        res.status(204).end()
-    }
-    else{
-        res.status(400).end()
-    }
+    res.status(status).end()
+    
 })
 
 export default app
