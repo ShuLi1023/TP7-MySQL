@@ -46,15 +46,28 @@ class TypeOrmDal {
     }
   }
 
-  async addEnvelope(gender, age, idStack) {
+  async create(gender, name, age) {
     const connection = await this.connect()
 
-    try {
-      const dataRepository = connection.getRepository(Envelope)
-      const newData = new Envelope(null, gender, age, idStack)
 
-      await dataRepository.save(newData)
-      return newData
+    try {
+
+      const envelopeRepository = connection.getRepository(Envelope)
+      const stackRepository = connection.getRepository(CorticalStack)
+      const newEnvelope = new Envelope(null, gender, age, null)
+      const newCorticalStack = new CorticalStack(null, gender, name, age, null)
+
+      await envelopeRepository.insert(newEnvelope)
+      await stackRepository.insert(newCorticalStack)
+      const env = await envelopeRepository.findOne({select:['id'],order: {id:"DESC"}})
+      const stack = await stackRepository.findOne({select:['id'],order: {id:"DESC"}})
+
+      await envelopeRepository.update(env.id,{idStack : stack.id})
+      await stackRepository.update(stack.id,{idEnvelope : env.id})
+      newCorticalStack.idEnvelope = env.id
+      newEnvelope.idStack = stack.id
+
+      return [newCorticalStack, newEnvelope]
     } catch (err) {
       console.error(err.message)
       throw err
@@ -98,11 +111,12 @@ class TypeOrmDal {
 }
 
 async removeStackFromEnvelope(id){
-  //const connection = await this.connect()
+  const connection = await this.connect()
 
     try {
 
       const stack = await this.getCorticalStackData(id)
+      const envelope = await this.getEnvelopeData(stack.idEnvelope)
       console.log("Stack DATA FOUND! " + stack.name)
       //const stack = this.getCorticalStackData(id)
 
@@ -110,12 +124,18 @@ async removeStackFromEnvelope(id){
 
         const connection = await this.connect()
 
-        await connection
-        .createQueryBuilder()
-        .update(CorticalStack)
-        .set({ idEnvelope: null})
-        .where("id = :id", { id: id })
-        .execute()
+        const envelopeRepository = connection.getRepository(Envelope)
+        const stackRepository = connection.getRepository(CorticalStack)
+        //const newEnvelope = new Envelope(null, gender, age, null)
+        //const newCorticalStack = new CorticalStack(null, gender, name, age, null)
+
+        //await envelopeRepository.insert(newEnvelope)
+        //await stackRepository.insert(newCorticalStack)
+        //const env = await envelopeRepository.findOne({select:['id'],order: {id:"DESC"}})
+        //const stack = await stackRepository.findOne({select:['id'],order: {id:"DESC"}})
+        await stackRepository.update(stack.id,{idEnvelope : envelope.id})
+        await envelopeRepository.update(envelope.id,{idStack : stack.id})
+
 
         /*
         await getConnection

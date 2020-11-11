@@ -2,17 +2,14 @@ import CorticalStack from './corticalStack'
 import Envelope from './envelope'
 
 import TypeOrmDal from './typeOrmDal'
-import mysql from 'mysql2/promise'
 
 class WeiClinic {
     
 
     async create(gender, name, age) {
         const dal = new TypeOrmDal()
-        const newStack = await dal.addCorticalStack(gender, name, age, null)
-        const newEnvelope = await dal.addEnvelope(gender, age, null)
-        //console.log("Newly created elements:\n" + newStack.name + "\n" + newEnvelope.id)
-        return [newStack, newEnvelope]
+        const newElements = await dal.create(gender, name, age)
+         return newElements
     }
 
     assignStackToEnvelope(idStack, idEnvelope) {
