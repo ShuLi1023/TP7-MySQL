@@ -115,13 +115,13 @@ async removeStackFromEnvelope(stackId){
   console.log("Given Id = " + stackId)
 
     try {
-        const stackRepository = connection.getRepository(CorticalStack)
-        const envelopeRepository = connection.getRepository(Envelope)
+      const stackRepository = connection.getRepository(CorticalStack)
+      const envelopeRepository = connection.getRepository(Envelope)
 
-        const stack = await stackRepository.findOne({id: stackId})
-        console.log("Stack found = " + stack.name)
+      const stack = await stackRepository.findOne({id: stackId})
+      console.log("Stack found = " + stack.name)
 
-      if(stack){
+      if(stack.idEnvelope != null){
         //const stack = await stackRepository.findOne({id: stackId})
         //console.log("Stack found = " + stack.name)
 
@@ -139,6 +139,39 @@ async removeStackFromEnvelope(stackId){
     } finally {
       await connection.close()
     }
+}
+
+
+async killEnvelope(idEnvelope) {
+
+    const connection = await this.connect()
+    try{
+      const envelopeRepository = connection.getRepository(Envelope)
+      
+      const envelope = await envelopeRepository.findOne({id: idEnvelope})
+      console.log("Envelope = " + envelope)
+
+      if(envelope != undefined){
+
+        if(envelope.idStack == null){
+          await envelopeRepository.delete(idEnvelope)
+          console.log("Empty Envelope Deleted")
+        }else{
+          await envelopeRepository.delete(idEnvelope)
+          const stackRepository = connection.getRepository(CorticalStack)
+          await stackRepository.update(envelope.idStack, { idEnvelope: null });
+          console.log("Stack removed from Envelope & Envelope deleted")
+        }
+        return 204
+      }else{
+        return 400
+      }
+    } catch (err) {
+      console.error(err.message)
+    } finally {
+      await connection.close()
+    }
+
 }
 
 }

@@ -24,8 +24,10 @@ class WeiClinic {
 
 
 
-    killEnvelope(idEnvelope) {
-
+    async killEnvelope(idEnvelope) {
+        const dal = new TypeOrmDal()
+        const status = await dal.killEnvelope(idEnvelope)
+        return status
     }
 
     destroyStack(idStack) {
