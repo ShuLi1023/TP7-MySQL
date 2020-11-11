@@ -9,8 +9,9 @@ class WeiClinic {
 
     async create(gender, name, age) {
         const dal = new TypeOrmDal()
-        const newStack = dal.addCorticalStack(gender, name, age, null)
-        const newEnvelope = dal.addEnvelope(gender, age, null)
+        const newStack = await dal.addCorticalStack(gender, name, age, null)
+        const newEnvelope = await dal.addEnvelope(gender, age, null)
+        //console.log("Newly created elements:\n" + newStack.name + "\n" + newEnvelope.id)
         return [newStack, newEnvelope]
     }
 
@@ -19,8 +20,10 @@ class WeiClinic {
     }
 
 
-    removeStackFromEnvelope(idStack) {
-        
+    async removeStackFromEnvelope(idStack) {
+        const dal = new TypeOrmDal()
+        const status = await dal.removeStackFromEnvelope(idStack)
+        return status
     }
 
 
@@ -31,7 +34,17 @@ class WeiClinic {
 
     destroyStack(idStack) {
 
-}
+    }
+
+    async getData(id){
+        const dal = new TypeOrmDal()
+        const envelope = await dal.getEnvelopeData(id)
+        const stack = await dal.getCorticalStackData(id)
+        return {
+            corticalStack: stack,
+            envelope: envelope
+        }
+    }
 }
 
 export default WeiClinic

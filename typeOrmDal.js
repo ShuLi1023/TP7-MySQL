@@ -1,4 +1,7 @@
 import { createConnection } from 'typeorm'
+import { getConnection } from 'typeorm'
+import {getRepository} from "typeorm";
+
 import CorticalStack from './corticalStack'
 import Envelope from './envelope'
 
@@ -6,6 +9,7 @@ import { envelopeSchema } from './envelopeSchema'
 import { stackSchema } from './corticalStackSchema'
 
 class TypeOrmDal {
+
   async connect() {
     try {
       return await createConnection({
@@ -23,13 +27,17 @@ class TypeOrmDal {
     }
   }
 
-  async getEnvelopeData() {
+  async getEnvelopeData(idEnvelope) {
     const connection = await this.connect()
-
     try {
-      const dataRepository = connection.getRepository(Envelope)
+      //const dataRepository = connection.getRepository(Envelope)
 
-      return await dataRepository.find()
+      const envelope = await getRepository(Envelope)
+        .createQueryBuilder("Envelope")
+        .where("Envelope.id = :id", { id: idEnvelope })
+        .getOne();
+
+      return envelope
     } catch (err) {
       console.error(err.message)
       throw err
@@ -55,13 +63,15 @@ class TypeOrmDal {
     }
   }
 
-  async getCorticalStackData() {
+  async getCorticalStackData(idStack) {
     const connection = await this.connect()
-
     try {
-      const dataRepository = connection.getRepository(CorticalStack)
+      const corticalStack = await getRepository(CorticalStack)
+        .createQueryBuilder("CorticalStack")
+        .where("CorticalStack.id = :id", { id: idStack })
+        .getOne();
 
-      return await dataRepository.find()
+      return corticalStack
     } catch (err) {
       console.error(err.message)
       throw err
@@ -70,7 +80,7 @@ class TypeOrmDal {
     }
   }
 
-  async addCorticalStack(realGender, name, age, idStack) {
+  async addCorticalStack(realGender, name, age, idEnvelope) {
     const connection = await this.connect()
 
     try {
@@ -86,6 +96,47 @@ class TypeOrmDal {
       await connection.close()
     }
 }
+
+async removeStackFromEnvelope(id){
+  //const connection = await this.connect()
+
+    try {
+
+      const stack = await this.getCorticalStackData(id)
+      console.log("Stack DATA FOUND! " + stack.name)
+      //const stack = this.getCorticalStackData(id)
+
+      if(stack){
+
+        const connection = await this.connect()
+
+        await connection
+        .createQueryBuilder()
+        .update(CorticalStack)
+        .set({ idEnvelope: null})
+        .where("id = :id", { id: id })
+        .execute()
+
+        /*
+        await getConnection
+        .createQueryBuilder()
+        .update(Envelope)
+        .set({ idStack: null})
+        .where("id = :id", { id: id })
+        .execute()
+        */
+        return 204
+      }else{
+        return 400
+      }
+    } catch (err) {
+      console.error(err.message)
+      throw err
+    } finally {
+      await connection.close()
+    }
+}
+
 }
 
 export default TypeOrmDal
