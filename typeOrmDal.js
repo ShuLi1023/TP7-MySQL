@@ -1,5 +1,4 @@
 import { createConnection } from 'typeorm'
-import { getConnection } from 'typeorm'
 import {getRepository} from "typeorm";
 
 import CorticalStack from './corticalStack'
@@ -121,7 +120,7 @@ async removeStackFromEnvelope(stackId){
       const stack = await stackRepository.findOne({id: stackId})
       console.log("Stack found = " + stack)
 
-      if(stack && stack.idEnvelope != null){
+      if(stack != undefined && stack.idEnvelope != null){
         //const stack = await stackRepository.findOne({id: stackId})
         //console.log("Stack found = " + stack.name)
 
