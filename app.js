@@ -49,23 +49,11 @@ app.put('/implant/:stackId/:envelopeId?', async (req, res) => {
 
     const stackId = parseInt(req.params.stackId)
     const envelopeId = parseInt(req.params.envelopeId)
+    const weiClinic = new WeiClinic()
+    const status = await weiClinic.assignStackToEnvelope(stackId,envelopeId)
 
-    const result = getClinic().assignStackToEnvelope(stackId,envelopeId)
-
-    switch (result) {
-        case '1':
-            res.status(204).end()
-            break;
-        case '2':
-            res.status(400).end()
-            break;
-            
-        default:
-            res.status(404).end()
-            break;
-    }
-    
-})
+    res.status(status).end()
+    })
 
 app.post('/kill/:envelopeId', async (req, res) => {
     const envelopeId = parseInt(req.params.envelopeId)
