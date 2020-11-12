@@ -49,7 +49,7 @@ app.put('/implant/:stackId/:envelopeId?', async (req, res) => {
 
     const stackId = parseInt(req.params.stackId)
     const envelopeId = parseInt(req.params.envelopeId)
-    const weiClinic = new WeiClinic()
+    const weiClinic = new TypeOrmDal()
     const status = await weiClinic.assignStackToEnvelope(stackId,envelopeId)
 
     res.status(status).end()
