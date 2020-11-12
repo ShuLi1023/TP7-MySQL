@@ -141,7 +141,7 @@ async removeStackFromEnvelope(stackId){
     }
 }
 
-async implantEnvelope(idStack, idEnvelope) {
+async assignStackToEnvelope(idStack, idEnvelope) {
 
     const connection = await this.connect()
     try {
