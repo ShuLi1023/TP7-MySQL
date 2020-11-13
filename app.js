@@ -55,8 +55,8 @@ app.put('/implant/:stackId/:envelopeId?', async (req, res) => {
 app.post('/kill/:envelopeId', async (req, res) => {
     const envelopeId = parseInt(req.params.envelopeId)
 
-    const dal = new TypeOrmDal()
-    const status = await dal.killEnvelope(envelopeId)
+    const weiClinic = new WeiClinic()
+    const status = await weiClinic.killEnvelope(envelopeId)
 
     res.status(status).end()
 
@@ -66,7 +66,7 @@ app.delete('/truedeath/:stackId', async (req, res) => {
 
     const stackId = parseInt(req.params.stackId)
     const weiClinic = new WeiClinic()
-    const status = await weiClinic.destroyStack(stackId)
+    const status = await weiClinic.destroy(stackId)
 
     res.status(status).end()
     

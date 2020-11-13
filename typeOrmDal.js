@@ -98,7 +98,7 @@ class TypeOrmDal {
     }
   }
 
-  async getCorticalStackData(idStack) {
+  async getCorticalStack(idStack) {
     const connection = await this.connect()
     try {
       const stackRepository = connection.getRepository(CorticalStack)
@@ -112,7 +112,7 @@ class TypeOrmDal {
     }
   }
 
-  async getEnvelopeData(idEnvelope) {
+  async getEnvelope(idEnvelope) {
     const connection = await this.connect()
     try {
       const envelopeRepository = connection.getRepository(Envelope)
@@ -142,57 +142,7 @@ class TypeOrmDal {
     }
   }
 
-<<<<<<< HEAD
 async removeStackFromEnvelope(stack){
-=======
-  async deleteEnvelope(idEnvelope){
-    const connection = await this.connect()
-    const envelopeRepository = connection.getRepository(Envelope)
-    try{
-      await envelopeRepository.delete({id: idEnvelope });
-    }
-    catch (err) {
-      console.error(err.message)
-      throw err
-    } finally {
-      await connection.close()
-    }
-  }
-
-  async deleteStack(idStack){
-    const connection = await this.connect()
-    const stackRepository = connection.getRepository(CorticalStack)
-    try{
-      await stackRepository.delete({id: idStack });
-    }
-    catch (err) {
-      console.error(err.message)
-      throw err
-    } finally {
-      await connection.close()
-    }
-  }
-  /*
-  async addCorticalStack(realGender, name, age, idEnvelope) {
-    const connection = await this.connect()
-
-    try {
-      const dataRepository = connection.getRepository(CorticalStack)
-      const newData = new CorticalStack(null, realGender, name, age, idEnvelope)
-
-      await dataRepository.save(newData)
-      return newData
-    } catch (err) {
-      console.error(err.message)
-      throw err
-    } finally {
-      await connection.close()
-    }
-}
-*/
-
-async removeStackFromEnvelope(stackId){
->>>>>>> dfbed07a3dd5ee2abfbee18929f6b4d5557d8a93
   const connection = await this.connect()
 
     try {
@@ -211,38 +161,35 @@ async removeStackFromEnvelope(stackId){
     }
 }
 
-
-async killEnvelope(idEnvelope) {
-
+  async destroyEnvelope(idEnvelope){
     const connection = await this.connect()
+    const envelopeRepository = connection.getRepository(Envelope)
     try{
-      const envelopeRepository = connection.getRepository(Envelope)
-      
-      const envelope = await envelopeRepository.findOne({id: idEnvelope})
-      console.log("Envelope = " + envelope)
-
-      if(envelope != undefined){
-
-        if(envelope.idStack == null){
-          await envelopeRepository.delete(idEnvelope)
-          console.log("Empty Envelope Deleted")
-        }else{
-          await envelopeRepository.delete(idEnvelope)
-          const stackRepository = connection.getRepository(CorticalStack)
-          await stackRepository.update(envelope.idStack, { idEnvelope: null });
-          console.log("Stack removed from Envelope & Envelope deleted")
-        }
-        return 204
-      }else{
-        return 400
-      }
-    } catch (err) {
+      await envelopeRepository.delete({id: idEnvelope });
+      return true
+    }
+    catch (err) {
       console.error(err.message)
+      throw err
     } finally {
       await connection.close()
     }
+  }
 
-}
+  async destroyStack(idStack){
+    const connection = await this.connect()
+    const stackRepository = connection.getRepository(CorticalStack)
+    try{
+      await stackRepository.delete({id: idStack });
+      return true
+    }
+    catch (err) {
+      console.error(err.message)
+      throw err
+    } finally {
+      await connection.close()
+    }
+  }
 
 
 }
