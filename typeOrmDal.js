@@ -127,7 +127,7 @@ class TypeOrmDal {
     }
   }
 
-  async getFreeEnvelopeData() {
+  async getFreeEnvelope() {
     const connection = await this.connect()
     try {
       const envelopeRepository = connection.getRepository(Envelope)

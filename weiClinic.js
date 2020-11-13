@@ -26,7 +26,7 @@ class WeiClinic {
           if (stack != undefined) {
             if (stack.idEnvelope === null) {
               if (Number.isNaN(idEnvelope)) {
-                const freeEnvelope = await dal.getFreeEnvelopeData()
+                const freeEnvelope = await dal.getFreeEnvelope()
                 if (freeEnvelope != undefined) {
                     await dal.updateEnvelope(freeEnvelope.id, idStack)
                     await dal.updateStack(idStack, freeEnvelope.id)
@@ -106,7 +106,7 @@ class WeiClinic {
         if(stack === undefined){
             return false
         }
-        
+
         if(stack.idEnvelope != null){
             const envelope = await dal.getEnvelope(stack.idEnvelope)
             return {
