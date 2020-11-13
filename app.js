@@ -1,6 +1,7 @@
 import express from 'express'
 import bodyParser from 'body-parser'
-import TypeOrmDal from './typeOrmDal'
+import WeiClinic from './weiClinic'
+//import TypeOrmDal from './typeOrmDal'
 
 const app = express()
 
@@ -15,9 +16,8 @@ app.use(function (_req, res, next) {
 app.get('/digitize', async (req, res) => {
 
     const { gender, name, age } = req.query
-
-    const dal = new TypeOrmDal()
-    const createdElements = await dal.create(gender, name, age)
+    const weiClinic = new WeiClinic()
+    const createdElements = await weiClinic.create(gender, name, age)
 
     res.status(200).set( 'Content-Type', 'application/json').json(createdElements)
 })
