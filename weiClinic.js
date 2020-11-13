@@ -53,10 +53,7 @@ class WeiClinic {
             await dal.updateStack(stack.id, null);
             await dal.updateEnvelope(stack.idEnvelope, null)
             return 204
-        }else{
-            return 400
-        }
-
+        }else return 400
     }
 
 
@@ -110,4 +107,6 @@ class WeiClinic {
     }
 }
 
-export default WeiClinic
+const weiClinic = new WeiClinic()
+
+export const getClinic = () => weiClinic

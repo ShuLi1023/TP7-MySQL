@@ -1,9 +1,7 @@
 import { createConnection } from 'typeorm'
 import {getRepository} from "typeorm";
-
 import CorticalStack from './corticalStack'
 import Envelope from './envelope'
-
 import { envelopeSchema } from './envelopeSchema'
 import { stackSchema } from './corticalStackSchema'
 
@@ -26,13 +24,10 @@ class TypeOrmDal {
     }
   }
 
-
-
   async createEnvelope(gender, age) {
     const connection = await this.connect()
 
     try {
-
       const envelopeRepository = connection.getRepository(Envelope)
       const envelope = new Envelope(null, gender, age, null)
 
@@ -52,7 +47,6 @@ class TypeOrmDal {
     const connection = await this.connect()
 
     try {
-
       const stackRepository = connection.getRepository(CorticalStack)
       const stack = new CorticalStack(null, gender, name, age, null)
       await stackRepository.insert(stack)
@@ -171,8 +165,6 @@ class TypeOrmDal {
       await connection.close()
     }
   }
-
-
 }
 
 export default TypeOrmDal

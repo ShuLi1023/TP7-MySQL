@@ -1,6 +1,6 @@
 import express from 'express'
 import bodyParser from 'body-parser'
-import WeiClinic from './weiClinic'
+import {getClinic} from './weiClinic'
 //import TypeOrmDal from './typeOrmDal'
 
 const app = express()
@@ -16,8 +16,7 @@ app.use(function (_req, res, next) {
 app.get('/digitize', async (req, res) => {
 
     const { gender, name, age } = req.query
-    const weiClinic = new WeiClinic()
-    const createdElements = await weiClinic.create(gender, name, age)
+    const createdElements = await getClinic().create(gender, name, age)
 
     res.status(200).set( 'Content-Type', 'application/json').json(createdElements)
 })
@@ -26,8 +25,7 @@ app.get('/digitize', async (req, res) => {
 app.post('/remove/:stackId', async (req, res) => {
     const stackId = parseInt(req.params.stackId)
 
-    const weiClinic = new WeiClinic()
-    const status = await weiClinic.removeStackFromEnvelope(stackId)
+    const status = await getClinic().removeStackFromEnvelope(stackId)
 
     res.status(status).end()
 
@@ -37,8 +35,8 @@ app.put('/implant/:stackId/:envelopeId?', async (req, res) => {
 
     const stackId = parseInt(req.params.stackId)
     const envelopeId = parseInt(req.params.envelopeId)
-    const weiClinic = new WeiClinic()
-    const status = await weiClinic.assignStackToEnvelope(stackId,envelopeId)
+
+    const status = await getClinic().assignStackToEnvelope(stackId,envelopeId)
 
     res.status(status).end()
     })
@@ -46,8 +44,7 @@ app.put('/implant/:stackId/:envelopeId?', async (req, res) => {
 app.post('/kill/:envelopeId', async (req, res) => {
     const envelopeId = parseInt(req.params.envelopeId)
 
-    const weiClinic = new WeiClinic()
-    const status = await weiClinic.killEnvelope(envelopeId)
+    const status = await getClinic().killEnvelope(envelopeId)
 
     res.status(status).end()
 
@@ -56,8 +53,8 @@ app.post('/kill/:envelopeId', async (req, res) => {
 app.delete('/truedeath/:stackId', async (req, res) => {
 
     const stackId = parseInt(req.params.stackId)
-    const weiClinic = new WeiClinic()
-    const status = await weiClinic.destroy(stackId)
+
+    const status = await getClinic().destroy(stackId)
 
     res.status(status).end()
 })
@@ -66,8 +63,7 @@ app.delete('/truedeath/:stackId', async (req, res) => {
 app.get('/find/:stackId', async (req, res) => {
     const stackId = parseInt(req.params.stackId)
 
-    const weiClinic = new WeiClinic()
-    const data = await weiClinic.getData(stackId)
+    const data = await getClinic().getData(stackId)
     if(data != false){
         res.status(200).set( 'Content-Type', 'application/json').json(data)
     }else{
