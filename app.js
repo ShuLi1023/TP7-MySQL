@@ -22,15 +22,6 @@ app.get('/digitize', async (req, res) => {
     res.status(200).set( 'Content-Type', 'application/json').json(createdElements)
 })
 
-app.get('/find/:stackId', async (req, res) => {
-    const stackId = parseInt(req.params.stackId)
-
-    const weiClinic = new WeiClinic()
-    const data = await weiClinic.getData(stackId)
-
-    res.status(200).set( 'Content-Type', 'application/json').json(data)
-
-})
 
 app.post('/remove/:stackId', async (req, res) => {
     const stackId = parseInt(req.params.stackId)
@@ -69,7 +60,20 @@ app.delete('/truedeath/:stackId', async (req, res) => {
     const status = await weiClinic.destroy(stackId)
 
     res.status(status).end()
-    
+})
+
+
+app.get('/find/:stackId', async (req, res) => {
+    const stackId = parseInt(req.params.stackId)
+
+    const weiClinic = new WeiClinic()
+    const data = await weiClinic.getData(stackId)
+    if(data != false){
+        res.status(200).set( 'Content-Type', 'application/json').json(data)
+    }else{
+        res.status(400).end("Specified stack doesn't exist")
+    }
+
 })
 
 export default app
