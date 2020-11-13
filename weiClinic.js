@@ -23,8 +23,7 @@ class WeiClinic {
     async assignStackToEnvelope(idStack, idEnvelope) {
         const dal = new TypeOrmDal()
           const stack = await dal.getCorticalStack(idStack)
-          if (stack != undefined) {
-            if (stack.idEnvelope === null) {
+          if (stack != undefined && stack.idEnvelope === null) {
               if (Number.isNaN(idEnvelope)) {
                 const freeEnvelope = await dal.getFreeEnvelope()
                 if (freeEnvelope != undefined) {
@@ -42,7 +41,6 @@ class WeiClinic {
                   } else  return 400
                 } else return 404
               }
-            } else return 400
           } else return 400
       }
     
@@ -51,8 +49,6 @@ class WeiClinic {
         const dal = new TypeOrmDal()
 
         const stack = await dal.getCorticalStack(idStack)
-        console.log(stack.idEnvelope)
-        console.log(stack.id)
         if(stack !== undefined && stack.idEnvelope !== null){
             await dal.updateStack(stack.id, null);
             await dal.updateEnvelope(stack.idEnvelope, null)
@@ -65,33 +61,28 @@ class WeiClinic {
 
 
     async killEnvelope(idEnvelope) {
-        var killed = false
         const dal = new TypeOrmDal()
         const envelope = await dal.getEnvelope(idEnvelope)
 
-        if(envelope != undefined){
+        if(envelope !== undefined){
             if(envelope.idStack === null){
-                killed = await dal.destroyEnvelope(idEnvelope)
+                await dal.deleteEnvelope(idEnvelope)
             }else{
                 await dal.updateStack(envelope.idStack, null)
-                killed = await dal.destroyEnvelope(idEnvelope)
+                await dal.deleteEnvelope(idEnvelope)
             }
-        }
-        
-        if(killed){
             return 204
-        }else{
-            return 400
-        }
+        }else return 400
+        
     }
 
     async destroy(idStack) {
         const dal = new TypeOrmDal()
         const stack = await dal.getCorticalStack(idStack)
         if(stack){
-          await dal.destroyStack(idStack)
+          await dal.deleteStack(idStack)
           if(stack.idEnvelope !==  null){
-            await dal.destroyEnvelope(stack.idEnvelope)
+            await dal.deleteEnvelope(stack.idEnvelope)
           }
           console.log("Stack and Envelope destroied")
           return 204

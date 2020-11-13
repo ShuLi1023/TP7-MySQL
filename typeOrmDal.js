@@ -142,7 +142,7 @@ class TypeOrmDal {
     }
   }
 
-  async destroyEnvelope(idEnvelope){
+  async deleteEnvelope(idEnvelope){
     const connection = await this.connect()
     const envelopeRepository = connection.getRepository(Envelope)
     try{
@@ -157,7 +157,7 @@ class TypeOrmDal {
     }
   }
 
-  async destroyStack(idStack){
+  async deleteStack(idStack){
     const connection = await this.connect()
     const stackRepository = connection.getRepository(CorticalStack)
     try{
