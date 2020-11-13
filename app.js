@@ -65,8 +65,8 @@ app.post('/kill/:envelopeId', async (req, res) => {
 app.delete('/truedeath/:stackId', async (req, res) => {
 
     const stackId = parseInt(req.params.stackId)
-    const dal = new TypeOrmDal()
-    const status = await dal.destroyStack(stackId)
+    const weiClinic = new WeiClinic()
+    const status = await weiClinic.destroyStack(stackId)
 
     res.status(status).end()
     
