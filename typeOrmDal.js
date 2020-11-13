@@ -39,11 +39,6 @@ class TypeOrmDal {
       await envelopeRepository.insert(envelope)
       const newEnvelope = await envelopeRepository.findOne({select:['id'],order: {id:"DESC"}})
 
-      //await envelopeRepository.update(env.id,{idStack : stack.id})
-      //await stackRepository.update(stack.id,{idEnvelope : env.id})
-      //newCorticalStack.idEnvelope = env.id
-      //newEnvelope.idStack = stack.id
-
       return newEnvelope
     } catch (err) {
       console.error(err.message)
@@ -147,49 +142,17 @@ class TypeOrmDal {
     }
   }
 
-  /*
-  async addCorticalStack(realGender, name, age, idEnvelope) {
-    const connection = await this.connect()
-
-    try {
-      const dataRepository = connection.getRepository(CorticalStack)
-      const newData = new CorticalStack(null, realGender, name, age, idEnvelope)
-
-      await dataRepository.save(newData)
-      return newData
-    } catch (err) {
-      console.error(err.message)
-      throw err
-    } finally {
-      await connection.close()
-    }
-}
-*/
-
-async removeStackFromEnvelope(stackId){
+async removeStackFromEnvelope(stack){
   const connection = await this.connect()
-
-  console.log("Given Id = " + stackId)
 
     try {
       const stackRepository = connection.getRepository(CorticalStack)
       const envelopeRepository = connection.getRepository(Envelope)
 
-      const stack = await stackRepository.findOne({id: stackId})
-      console.log("Stack found = " + stack)
-
-      if(stack != undefined && stack.idEnvelope != null){
-        //const stack = await stackRepository.findOne({id: stackId})
-        //console.log("Stack found = " + stack.name)
-
-        await stackRepository.update(stackId, { idEnvelope: null });
-        await envelopeRepository.update(stack.idEnvelope,{idStack : null})
-        console.log("Stack and Envelope updated")
-
-        return 204
-      }else{
-        return 400
-      }
+      await stackRepository.update(stack.id, { idEnvelope: null });
+      await envelopeRepository.update(stack.idEnvelope,{idStack : null})
+      console.log("Stack and Envelope updated")
+      return true
     } catch (err) {
       console.error(err.message)
       throw err

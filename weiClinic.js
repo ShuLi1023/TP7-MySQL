@@ -49,10 +49,20 @@ class WeiClinic {
 
     async removeStackFromEnvelope(idStack) {
         const dal = new TypeOrmDal()
-        const status = await dal.removeStackFromEnvelope(idStack)
-        return status
-    }
 
+        const stack = await dal.getCorticalStackData(idStack)
+        if(stack === undefined && stack.idEnvelope === null){
+            return 400
+        }else{
+            const removed = await dal.removeStackFromEnvelope(stack)
+            if(removed){
+                return 204
+            }else{
+                return 400
+            }
+        }
+
+    }
 
 
     async killEnvelope(idEnvelope) {

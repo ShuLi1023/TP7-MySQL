@@ -25,9 +25,8 @@ app.get('/digitize', async (req, res) => {
 app.get('/find/:stackId', async (req, res) => {
     const stackId = parseInt(req.params.stackId)
 
-    const dal = new TypeOrmDal()
-
-    const data = await dal.getData(stackId)
+    const weiClinic = new WeiClinic()
+    const data = await weiClinic.getData(stackId)
 
     res.status(200).set( 'Content-Type', 'application/json').json(data)
 
@@ -36,8 +35,8 @@ app.get('/find/:stackId', async (req, res) => {
 app.post('/remove/:stackId', async (req, res) => {
     const stackId = parseInt(req.params.stackId)
 
-    const dal = new TypeOrmDal()
-    const status = await dal.removeStackFromEnvelope(stackId)
+    const weiClinic = new WeiClinic()
+    const status = await weiClinic.removeStackFromEnvelope(stackId)
 
     res.status(status).end()
 
