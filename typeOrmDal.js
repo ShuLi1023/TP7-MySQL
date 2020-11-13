@@ -147,6 +147,33 @@ class TypeOrmDal {
     }
   }
 
+  async deleteEnvelope(idEnvelope){
+    const connection = await this.connect()
+    const envelopeRepository = connection.getRepository(Envelope)
+    try{
+      await envelopeRepository.delete({id: idEnvelope });
+    }
+    catch (err) {
+      console.error(err.message)
+      throw err
+    } finally {
+      await connection.close()
+    }
+  }
+
+  async deleteStack(idStack){
+    const connection = await this.connect()
+    const stackRepository = connection.getRepository(CorticalStack)
+    try{
+      await stackRepository.delete({id: idStack });
+    }
+    catch (err) {
+      console.error(err.message)
+      throw err
+    } finally {
+      await connection.close()
+    }
+  }
   /*
   async addCorticalStack(realGender, name, age, idEnvelope) {
     const connection = await this.connect()
@@ -231,34 +258,7 @@ async killEnvelope(idEnvelope) {
 
 }
 
-async destroyStack(idStack) {
-  const connection = await this.connect()
 
-  try {
-    const stackRepository = connection.getRepository(CorticalStack)
-    const envelopeRepository = connection.getRepository(Envelope)
-
-    const stack = await stackRepository.findOne({id : idStack})
-    console.log("Stack found = " + stack)
-
-  if(stack){
-    await stackRepository.delete({id: idStack });
-    if(stack.idEnvelope !==  null){
-      await envelopeRepository.delete({id : stack.idEnvelope})
-    }
-    console.log("Stack and Envelope destroied")
-
-    return 204
-  }else{
-    return 400
-  }
-} catch (err) {
-  console.error(err.message)
-  throw err
-} finally {
-  await connection.close()
-}
-}
 }
 
 export default TypeOrmDal

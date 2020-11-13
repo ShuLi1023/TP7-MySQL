@@ -62,7 +62,17 @@ class WeiClinic {
     }
 
     async destroyStack(idStack) {
-
+        const dal = new TypeOrmDal()
+        const stack = await dal.getCorticalStackData(idStack)
+        if(stack){
+          await dal.deleteStack(idStack)
+          if(stack.idEnvelope !==  null){
+            await dal.deleteEnvelope(stack.idEnvelope)
+          }
+          console.log("Stack and Envelope destroied")
+          return 204
+        }
+        else return 400
     }
 
     async getData(stackId){
