@@ -142,25 +142,6 @@ class TypeOrmDal {
     }
   }
 
-async removeStackFromEnvelope(stack){
-  const connection = await this.connect()
-
-    try {
-      const stackRepository = connection.getRepository(CorticalStack)
-      const envelopeRepository = connection.getRepository(Envelope)
-
-      await stackRepository.update(stack.id, { idEnvelope: null });
-      await envelopeRepository.update(stack.idEnvelope,{idStack : null})
-      console.log("Stack and Envelope updated")
-      return true
-    } catch (err) {
-      console.error(err.message)
-      throw err
-    } finally {
-      await connection.close()
-    }
-}
-
   async destroyEnvelope(idEnvelope){
     const connection = await this.connect()
     const envelopeRepository = connection.getRepository(Envelope)

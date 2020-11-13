@@ -51,15 +51,14 @@ class WeiClinic {
         const dal = new TypeOrmDal()
 
         const stack = await dal.getCorticalStack(idStack)
-        if(stack === undefined && stack.idEnvelope === null){
-            return 400
+        console.log(stack.idEnvelope)
+        console.log(stack.id)
+        if(stack !== undefined && stack.idEnvelope !== null){
+            await dal.updateStack(stack.id, null);
+            await dal.updateEnvelope(stack.idEnvelope, null)
+            return 204
         }else{
-            const removed = await dal.removeStackFromEnvelope(stack)
-            if(removed){
-                return 204
-            }else{
-                return 400
-            }
+            return 400
         }
 
     }
