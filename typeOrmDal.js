@@ -132,6 +132,21 @@ class TypeOrmDal {
     }
   }
 
+  async getFreeEnvelopeData() {
+    const connection = await this.connect()
+    try {
+      const envelopeRepository = connection.getRepository(Envelope)
+
+      const envelope = await envelopeRepository.findOne({idStack: null})
+      return envelope
+    } catch (err) {
+      console.error(err.message)
+      throw err
+    } finally {
+      await connection.close()
+    }
+  }
+
   /*
   async addCorticalStack(realGender, name, age, idEnvelope) {
     const connection = await this.connect()
@@ -183,50 +198,6 @@ async removeStackFromEnvelope(stackId){
     }
 }
 
-async assignStackToEnvelope(idStack, idEnvelope) {
-
-    const connection = await this.connect()
-    try {
-      const stackRepository = connection.getRepository(CorticalStack)
-      const envelopeRepository = connection.getRepository(Envelope)
-      const stack = await stackRepository.findOne({id: idStack})
-      if (stack != undefined) {
-        if (stack.idEnvelope === null) {
-          if (Number.isNaN(idEnvelope)) {
-            const freeEnvelope = await envelopeRepository.findOne({idStack: null})
-            if (freeEnvelope != undefined) {
-              await stackRepository.update(idStack, {idEnvelope: freeEnvelope.id})
-              await envelopeRepository.update(freeEnvelope.id, {idStack: idStack})
-              return 204
-            } else {
-              return 400
-            }
-          } else {
-            const envelope = await envelopeRepository.findOne({id: idEnvelope})
-            if (envelope != undefined) {
-              if (envelope.idStack === null) {
-                await stackRepository.update(idStack, {idEnvelope: idEnvelope});
-                await envelopeRepository.update(idEnvelope, { idStack: idStack })
-                return 204
-              } else {
-                return 404
-              }
-            } else {
-              return 404
-            }
-          }
-        } else {
-          return 400
-        }
-      } else {
-        return 400
-      }
-    } catch (err) {
-      console.error(err.message)
-    } finally {
-      await connection.close()
-    }
-  }
 
 async killEnvelope(idEnvelope) {
 

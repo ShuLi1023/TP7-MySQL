@@ -20,9 +20,32 @@ class WeiClinic {
         return [newEnvelope, newStack]
     }
 
-    assignStackToEnvelope(idStack, idEnvelope) {
-
-    }
+    async assignStackToEnvelope(idStack, idEnvelope) {
+        const dal = new TypeOrmDal()
+          const stack = await dal.getCorticalStackData(idStack)
+          if (stack != undefined) {
+            if (stack.idEnvelope === null) {
+              if (Number.isNaN(idEnvelope)) {
+                const freeEnvelope = await dal.getFreeEnvelopeData()
+                if (freeEnvelope != undefined) {
+                    await dal.updateEnvelope(freeEnvelope.id, idStack)
+                    await dal.updateStack(idStack, freeEnvelope.id)
+                  return 204
+                } else  return 400
+              } else {
+                const envelope = await dal.getEnvelopeData(idEnvelope)
+                if (envelope != undefined) {
+                  if (envelope.idStack === null) {
+                    await dal.updateEnvelope(envelope.id, stack.id)
+                    await dal.updateStack(idStack, idEnvelope)
+                    return 204
+                  } else  return 400
+                } else return 404
+              }
+            } else return 400
+          } else return 400
+      }
+    
 
     async removeStackFromEnvelope(idStack) {
         const dal = new TypeOrmDal()
