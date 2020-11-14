@@ -1,17 +1,17 @@
 import {getClinic} from '../weiClinic'
 
-const mockEnvelopeData = jest.fn()
-const mockStackData = jest.fn()
-const mockUpdateEnvelopeData = jest.fn()
-const mockUpdateStackData = jest.fn()
+const mockCreateEnvelope = jest.fn()
+const mockCreateStack = jest.fn()
+const mockUpdateEnvelope = jest.fn()
+const mockUpdateStack = jest.fn()
 const mockGetData = jest.fn()
 
 jest.mock('../typeOrmDal', () => {
     return jest.fn().mockImplementation(() => ({
-        createEnvelope: mockEnvelopeData,
-        createStack : mockStackData,
-        updateEnvelope: mockUpdateEnvelopeData,
-        updateStack : mockUpdateStackData,
+        createEnvelope: mockCreateEnvelope,
+        createStack : mockCreateStack,
+        updateEnvelope: mockUpdateEnvelope,
+        updateStack : mockUpdateStack,
         getData: mockGetData
     }))
 })
@@ -27,25 +27,29 @@ describe('WeiClinic Tests', () => {
         const Envelope = { id: 1, gender : "F", age : "11", idStack : null }
         const CorticalStack = {id : 2, realGender : "F", name : "abc", age : "11", idEnvelope: null}
 
-        mockEnvelopeData.mockReturnValue(Envelope)
-        mockStackData.mockReturnValue(CorticalStack)
+        mockCreateEnvelope.mockReturnValue(Envelope)
+        mockCreateStack.mockReturnValue(CorticalStack)
 
-        //console.log("Mock Envelope Data = " + mockEnvelopeData.mockReturnValue(Envelope))
-        //console.log("Mock Stack Data = " + mockStackData.mockReturnValue(CorticalStack))
+        //console.log("Mock Envelope Data = " + mockCreateEnvelope.mockReturnValue(Envelope))
+        //console.log("Mock Stack Data = " + mockCreateStack.mockReturnValue(CorticalStack))
 
         CorticalStack['idEnvelope'] = 1;
         Envelope['idStack'] = 2;
 
-        mockUpdateEnvelopeData.mockReturnValue(Envelope)
-        mockUpdateStackData.mockReturnValue(CorticalStack)
+        mockUpdateEnvelope.mockReturnValue(Envelope)
+        mockUpdateStack.mockReturnValue(CorticalStack)
 
-        //console.log("Mock Envelope Data = " + mockUpdateEnvelopeData.mockReturnValue(Envelope))
-        //console.log("Mock Stack Data = " + mockUpdateStackData.mockReturnValue(CorticalStack))
+        //console.log("Mock Envelope Data = " + mockUpdateEnvelope.mockReturnValue(Envelope))
+        //console.log("Mock Stack Data = " + mockUpdateStack.mockReturnValue(CorticalStack))
 
         const actualResult = await getClinic().create("F", "abc", 11)
         const expectedResult = [Envelope, CorticalStack]
 
         expect(actualResult).toEqual(expectedResult)
+        expect(mockCreateEnvelope).toHaveBeenCalledWith("F", 11)
+        expect(mockCreateStack).toHaveBeenCalledWith("F", "abc", 11)
+        expect(mockUpdateEnvelope).toHaveBeenCalledWith(1, 2)
+        expect(mockUpdateStack).toHaveBeenCalledWith(2, 1)
     })
 
 })
