@@ -28,21 +28,10 @@ const status = 204
 const AGE = 47
 const GENDER = "M"
 const NAME = "Elias Ryker"
-const ResponseBody = [
-    {
-       id: 1,
-       gender: GENDER,
-       age: AGE,
-       idStack: 1
-   },
-   {
-       id: 1,
-       realGender: GENDER,
-       name: NAME,
-       age: AGE,
-       idEnvelope: 1
-   }
-]
+
+const mockEnvelope = { id: 1, gender: GENDER, age: AGE, idStack: 2 }
+const mockStack = {id: 2, realGender: GENDER, name: NAME, age: AGE, idEnvelope: 1 }
+const ResponseBody = [mockEnvelope, mockStack]
 
 describe('APP Tests', () => {
 
@@ -60,7 +49,7 @@ describe('APP Tests', () => {
         expect(response.status).toBe(200)
         expect(response.body).toEqual(ResponseBody)
         expect(mockCreate).toHaveBeenCalledTimes(1)
-        expect(mockCreate).toHaveBeenCalledWith(GENDER, NAME, AGE)
+        expect(mockCreate).toHaveBeenCalledWith("M", "Elias Ryker", 47)
     })
 
     test('POST remove', async () => {
