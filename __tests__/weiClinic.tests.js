@@ -2,17 +2,21 @@ import {getClinic} from '../weiClinic'
 
 const mockCreateEnvelope = jest.fn()
 const mockCreateStack = jest.fn()
+const mockGetEnvelope = jest.fn()
+const mockGetStack = jest.fn()
 const mockUpdateEnvelope = jest.fn()
 const mockUpdateStack = jest.fn()
 const mockGetData = jest.fn()
 
 jest.mock('../typeOrmDal', () => {
     return jest.fn().mockImplementation(() => ({
-        createEnvelope: mockCreateEnvelope,
+        createEnvelope : mockCreateEnvelope,
         createStack : mockCreateStack,
+        getEnvelope : mockGetEnvelope,
+        getCorticalStack : mockGetStack,
         updateEnvelope: mockUpdateEnvelope,
         updateStack : mockUpdateStack,
-        getData: mockGetData
+        getData : mockGetData
     }))
 })
 
@@ -50,6 +54,26 @@ describe('WeiClinic Tests', () => {
         expect(mockCreateStack).toHaveBeenCalledWith("F", "abc", 11)
         expect(mockUpdateEnvelope).toHaveBeenCalledWith(1, 2)
         expect(mockUpdateStack).toHaveBeenCalledWith(2, 1)
+    })
+
+    test('Remove Function - When stack is embedded in an Envelope', async () => {
+       
+        const CorticalStack = {id : 2, realGender : "F", name : "abc", age : "11", idEnvelope: 1}
+
+        mockGetStack.mockReturnValue(CorticalStack)
+
+        mockUpdateEnvelope.mockReturnValue(true)
+        mockUpdateStack.mockReturnValue(true)
+
+        //console.log("Mock Envelope Data = " + mockUpdateEnvelope.mockReturnValue(Envelope))
+        //console.log("Mock Stack Data = " + mockUpdateStack.mockReturnValue(CorticalStack))
+
+        const actualResult = await getClinic().removeStackFromEnvelope(2)
+        const expectedResult = 204
+
+        expect(actualResult).toEqual(expectedResult)
+        expect(mockUpdateEnvelope).toHaveBeenCalledWith(1, null)
+        expect(mockUpdateStack).toHaveBeenCalledWith(2, null)
     })
 
 })
