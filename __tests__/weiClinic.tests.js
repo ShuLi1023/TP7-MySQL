@@ -1,4 +1,4 @@
-import {getClinic} from '../weiClinic'
+import WeiClinic from '../WeiClinic'
 
 const mockCreateEnvelope = jest.fn()
 const mockCreateStack = jest.fn()
@@ -31,7 +31,7 @@ beforeEach(() => {
 describe('WeiClinic Tests', () => {
 
     test('Create Function', async () => {
-       
+        const weiClinic = new WeiClinic()
         const Envelope = { id: 1, gender : "F", age : "11", idStack : null }
         const CorticalStack = {id : 2, realGender : "F", name : "abc", age : "11", idEnvelope: null}
 
@@ -50,7 +50,7 @@ describe('WeiClinic Tests', () => {
         //console.log("Mock Envelope Data = " + mockUpdateEnvelope.mockReturnValue(Envelope))
         //console.log("Mock Stack Data = " + mockUpdateStack.mockReturnValue(CorticalStack))
 
-        const actualResult = await getClinic().create("F", "abc", 11)
+        const actualResult = await weiClinic.create("F", "abc", 11)
         const expectedResult = [Envelope, CorticalStack]
 
         expect(actualResult).toEqual(expectedResult)
@@ -62,13 +62,14 @@ describe('WeiClinic Tests', () => {
 
     test('Remove Function - When stack is embedded in an Envelope', async () => {
        
+        const weiClinic = new WeiClinic()
         const CorticalStack = {id : 2, realGender : "F", name : "abc", age : "11", idEnvelope: 1}
 
         mockGetStack.mockReturnValue(CorticalStack)
         mockUpdateEnvelope.mockReturnValue(true)
         mockUpdateStack.mockReturnValue(true)
 
-        const actualResult = await getClinic().removeStackFromEnvelope(2)
+        const actualResult = await weiClinic.removeStackFromEnvelope(2)
         const expectedResult = 204
 
         expect(actualResult).toEqual(expectedResult)
@@ -78,14 +79,14 @@ describe('WeiClinic Tests', () => {
     })
 
     test('Remove Function - When stack is not embedded in an Envelope', async () => {
-       
+        const weiClinic = new WeiClinic()
         const CorticalStack = {id : 2, realGender : "F", name : "abc", age : "11", idEnvelope: null}
 
         mockGetStack.mockReturnValue(CorticalStack)
         mockUpdateEnvelope.mockReturnValue(true)
         mockUpdateStack.mockReturnValue(true)
 
-        const actualResult = await getClinic().removeStackFromEnvelope(2)
+        const actualResult = await weiClinic.removeStackFromEnvelope(2)
         const expectedResult = 400
 
         expect(actualResult).toEqual(expectedResult)
@@ -93,12 +94,12 @@ describe('WeiClinic Tests', () => {
     })
 
     test('Remove Function - When stack cannot be found', async () => {
-       
+        const weiClinic = new WeiClinic()
         mockGetStack.mockReturnValue(undefined)
         mockUpdateEnvelope.mockReturnValue(true)
         mockUpdateStack.mockReturnValue(true)
 
-        const actualResult = await getClinic().removeStackFromEnvelope(2)
+        const actualResult = await weiClinic.removeStackFromEnvelope(2)
         const expectedResult = 400
 
         expect(actualResult).toEqual(expectedResult)
@@ -106,14 +107,14 @@ describe('WeiClinic Tests', () => {
     })
 
     test('Kill Function - When stack is embedded in an Envelope', async () => {
-       
+        const weiClinic = new WeiClinic()
         const Envelope = { id: 1, gender : "F", age : "11", idStack : 2 }
 
         mockGetEnvelope.mockReturnValue(Envelope)
         mockDeleteEnvelope.mockReturnValue(true)
         mockUpdateStack.mockReturnValue(true)
 
-        const actualResult = await getClinic().killEnvelope(1)
+        const actualResult = await weiClinic.killEnvelope(1)
         const expectedResult = 204
 
         expect(actualResult).toEqual(expectedResult)
@@ -123,13 +124,13 @@ describe('WeiClinic Tests', () => {
     })
 
     test('Kill Function - When Envelope is empty', async () => {
-       
+        const weiClinic = new WeiClinic()
         const Envelope = { id: 1, gender : "F", age : "11", idStack : null }
 
         mockGetEnvelope.mockReturnValue(Envelope)
         mockDeleteEnvelope.mockReturnValue(true)
 
-        const actualResult = await getClinic().killEnvelope(1)
+        const actualResult = await weiClinic.killEnvelope(1)
         const expectedResult = 204
 
         expect(actualResult).toEqual(expectedResult)
@@ -139,10 +140,10 @@ describe('WeiClinic Tests', () => {
     })
 
     test('Kill Function - When Envelope does not exist', async () => {
-
+        const weiClinic = new WeiClinic()
         mockGetEnvelope.mockReturnValue(undefined)
 
-        const actualResult = await getClinic().killEnvelope(1)
+        const actualResult = await weiClinic.killEnvelope(1)
         const expectedResult = 400
 
         expect(actualResult).toEqual(expectedResult)
@@ -152,14 +153,14 @@ describe('WeiClinic Tests', () => {
     })
 
     test('True Death Function - When stack is embedded in an Envelope', async () => {
-       
+        const weiClinic = new WeiClinic()
         const CorticalStack = {id : 2, realGender : "F", name : "abc", age : "11", idEnvelope: 1}
 
         mockGetStack.mockReturnValue(CorticalStack)
         mockDeleteStack.mockReturnValue(true)
         mockDeleteEnvelope.mockReturnValue(true)
 
-        const actualResult = await getClinic().destroy(2)
+        const actualResult = await weiClinic.destroy(2)
         const expectedResult = 204
 
         expect(actualResult).toEqual(expectedResult)
@@ -169,12 +170,12 @@ describe('WeiClinic Tests', () => {
     })
 
     test('True Death Function - When stack is not embedded in an Envelope', async () => {
-       
+        const weiClinic = new WeiClinic()
         const CorticalStack = {id : 2, realGender : "F", name : "abc", age : "11", idEnvelope: null}
 
         mockGetStack.mockReturnValue(CorticalStack)
         mockDeleteStack.mockReturnValue(true)
-        const actualResult = await getClinic().destroy(2)
+        const actualResult = await weiClinic.destroy(2)
         const expectedResult = 204
 
         expect(actualResult).toEqual(expectedResult)
@@ -184,9 +185,9 @@ describe('WeiClinic Tests', () => {
     })
 
     test('True Death Function - When stack does not exist', async () => {
-
+        const weiClinic = new WeiClinic()
         mockGetStack.mockReturnValue(undefined)
-        const actualResult = await getClinic().destroy(2)
+        const actualResult = await weiClinic.destroy(2)
         const expectedResult = 400
 
         expect(actualResult).toEqual(expectedResult)

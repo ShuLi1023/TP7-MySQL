@@ -1,6 +1,6 @@
 import express from 'express'
 import bodyParser from 'body-parser'
-import {getClinic} from './weiClinic'
+import WeiClinic from './WeiClinic'
 
 const app = express()
 
@@ -14,17 +14,21 @@ app.use(function (_req, res, next) {
 
 app.get('/digitize', async (req, res) => {
 
+    const weiClinic = new WeiClinic()
     const { gender, name, age } = req.query
-    const createdElements = await getClinic().create(gender, name, age)
+    
+    const createdElements = await weiClinic.create(gender, name, age)
 
     res.status(200).set( 'Content-Type', 'application/json').json(createdElements)
 })
 
 
 app.post('/remove/:stackId', async (req, res) => {
+    
+    const weiClinic = new WeiClinic()
     const stackId = parseInt(req.params.stackId)
-
-    const status = await getClinic().removeStackFromEnvelope(stackId)
+    
+    const status = await weiClinic.removeStackFromEnvelope(stackId)
 
     res.status(status).end()
 
@@ -32,37 +36,40 @@ app.post('/remove/:stackId', async (req, res) => {
 
 app.put('/implant/:stackId/:envelopeId?', async (req, res) => {
 
+    const weiClinic = new WeiClinic()
     const stackId = parseInt(req.params.stackId)
     const envelopeId = parseInt(req.params.envelopeId)
 
-    const status = await getClinic().assignStackToEnvelope(stackId,envelopeId)
+    const status = await weiClinic.assignStackToEnvelope(stackId,envelopeId)
 
     res.status(status).end()
     })
 
 app.post('/kill/:envelopeId', async (req, res) => {
+    const weiClinic = new WeiClinic()
     const envelopeId = parseInt(req.params.envelopeId)
 
-    const status = await getClinic().killEnvelope(envelopeId)
+    const status = await weiClinic.killEnvelope(envelopeId)
 
     res.status(status).end()
 
 })
 
 app.delete('/truedeath/:stackId', async (req, res) => {
-
+    const weiClinic = new WeiClinic()
     const stackId = parseInt(req.params.stackId)
 
-    const status = await getClinic().destroy(stackId)
+    const status = await weiClinic.destroy(stackId)
 
     res.status(status).end()
 })
 
 
 app.get('/find/:stackId', async (req, res) => {
+    const weiClinic = new WeiClinic()
     const stackId = parseInt(req.params.stackId)
 
-    const data = await getClinic().getData(stackId)
+    const data = await weiClinic.getData(stackId)
     if(data != false){
         res.status(200).set( 'Content-Type', 'application/json').json(data)
     }else{

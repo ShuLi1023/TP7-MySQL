@@ -1,6 +1,3 @@
-import CorticalStack from './corticalStack'
-import Envelope from './envelope'
-
 import TypeOrmDal from './typeOrmDal'
 
 class WeiClinic {
@@ -103,6 +100,4 @@ class WeiClinic {
     }
 }
 
-const weiClinic = new WeiClinic()
-
-export const getClinic = () => weiClinic
+export default WeiClinic

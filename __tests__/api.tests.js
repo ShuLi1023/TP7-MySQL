@@ -1,17 +1,27 @@
 import { async } from 'regenerator-runtime'
 import request from 'supertest'
 import app from '../app'
-import * as clinicDependency from '../weiClinic'
+
+const mockCreate = jest.fn()
+const mockRemove = jest.fn()
+const mockAssign  = jest.fn()
+const mockKill = jest.fn()
+const mockDestroy = jest.fn()
+const mockGetData = jest.fn()
+
+jest.mock('../weiClinic', () => {
+    return jest.fn().mockImplementation(() => ({
+        create: mockCreate,
+        removeStackFromEnvelope: mockRemove,
+        assignStackToEnvelope: mockAssign,
+        killEnvelope: mockKill,
+        destroy: mockDestroy,
+        getData: mockGetData
+    }))
+})
 
 beforeEach(() => {
-    clinicDependency.getClinic = jest.fn().mockReturnValue({
-        create: jest.fn(),
-        removeStackFromEnvelope: jest.fn(),
-        assignStackToEnvelope: jest.fn(),
-        killEnvelope: jest.fn(),
-        destroy: jest.fn(),
-        getData: jest.fn()
-    })
+  jest.clearAllMocks()
 })
 
 const status = 204
@@ -34,19 +44,16 @@ const ResponseBody = [
    }
 ]
 
-describe('Async action', () => {
+describe('APP Tests', () => {
+
     test('GET digitize', async () => {
         const query = {
             gender: GENDER,
-            age: AGE,
-            name: NAME
+            name: NAME,
+            age: AGE
         }
         
-        const create = jest.fn().mockReturnValue(ResponseBody)
-
-        clinicDependency.getClinic.mockReturnValue({
-            create
-        })
+        mockCreate.mockReturnValue(ResponseBody)
 
         const response = await request(app).get('/digitize').query(query)
         
@@ -58,11 +65,8 @@ describe('Async action', () => {
 
     test('POST remove', async () => {
 
-        const removeStackFromEnvelope = jest.fn().mockReturnValue(status)
+        mockRemove.mockReturnValue(status)
 
-        clinicDependency.getClinic.mockReturnValue({
-            removeStackFromEnvelope
-        })
         const response = await  request(app).post('/remove/42').end()
 
         expect(response.status).toBe(status)
@@ -71,11 +75,7 @@ describe('Async action', () => {
     })
 
     test('PUT implant', async () => {
-        const assignStackToEnvelope = jest.fn().mockReturnValue(status)
-
-        clinicDependency.getClinic.mockReturnValue({
-            assignStackToEnvelope
-        })
+        mockAssign.mockReturnValue(status)
 
         const response = await request(app).put('/implant/7').end()
 
@@ -86,12 +86,8 @@ describe('Async action', () => {
 
     test('POST kill', async () => {
 
-        const killEnvelope = jest.fn().mockReturnValue(status)
+        mockKill.mockReturnValue(status)
 
-        clinicDependency.getClinic.mockReturnValue({
-            killEnvelope
-        })
-        
         const response = await request(app).post('/kill/42').end()
 
         expect(response.status).toBe(status)
@@ -101,11 +97,8 @@ describe('Async action', () => {
 
     test('DELETE truedeath', async() => {
 
-        const destroy = jest.fn().mockReturnValue(status)
+        mockDestroy.mockReturnValue(status)
 
-        clinicDependency.getClinic.mockReturnValue({
-            destroy
-        })
         const response = await request(app).delete('/truedeath/65').end()
 
         expect(response.status).toBe(status)
@@ -114,11 +107,7 @@ describe('Async action', () => {
     })
 
     test('GET find', async() => {
-        const getData = jest.fn().mockReturnValue(ResponseBody)
-
-        clinicDependency.getClinic.mockReturnValue({
-            getData
-        })
+        mockGetData.mockReturnValue(ResponseBody)
 
         const response = await request(app).get('/find/44')
 
@@ -129,17 +118,13 @@ describe('Async action', () => {
     })
 
     test('GET not find', async() => {
-        const getData = jest.fn().mockReturnValue(false)
-
-        clinicDependency.getClinic.mockReturnValue({
-            getData
-        })
+        mockGetData.mockReturnValue(false)
 
         const response = await request(app).get('/find/44').end("Specified stack doesn't exist")
 
         expect(response.status).toBe(400)
-        expect(getData).toBeCalledTimes(1)
-        expect(getData).toHaveBeenCalledWith(44)
+        expect(mockGetData).toBeCalledTimes(1)
+        expect(mockGetData).toHaveBeenCalledWith(44)
     })
 
 })
