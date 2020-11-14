@@ -106,13 +106,13 @@ describe('WeiClinic Tests', () => {
         expect(mockGetStack).toHaveBeenCalledWith(2)
     })
 
-        test('Implant Function - When stack is not found', async () => {
-       
+    test('Implant Function - When stack is not found', async () => {
+      const weiClinic = new WeiClinic()
       const CorticalStack = {id : 2, realGender : "F", name : "abc", age : "11", idEnvelope: 1}
 
       mockGetStack.mockReturnValue(undefined)
 
-      const actualResult = await getClinic().assignStackToEnvelope(1)
+      const actualResult = await weiClinic.assignStackToEnvelope(1)
       const expectedResult = 400
 
       expect(actualResult).toEqual(expectedResult)
@@ -120,12 +120,12 @@ describe('WeiClinic Tests', () => {
   })
 
   test('Implant Function - When stack is found but is not avaliable', async () => {
-       
+    const weiClinic = new WeiClinic()  
     const CorticalStack = {id : 2, realGender : "F", name : "abc", age : "11", idEnvelope: 1}
 
     mockGetStack.mockReturnValue(CorticalStack)
 
-    const actualResult = await getClinic().assignStackToEnvelope(2)
+    const actualResult = await weiClinic.assignStackToEnvelope(2)
     const expectedResult = 400
 
     expect(actualResult).toEqual(expectedResult)
@@ -133,13 +133,13 @@ describe('WeiClinic Tests', () => {
 })
 
 test('Implant Function - When stack is found, avaliable and envelope is not given,free envelopes not avaliable', async () => {
-       
+  const weiClinic = new WeiClinic()   
   const CorticalStack = {id : 2, realGender : "F", name : "abc", age : "11", idEnvelope: null}
 
   mockGetStack.mockReturnValue(CorticalStack)
   mockGetFreeEnvelope.mockReturnValue(undefined)
 
-  const actualResult = await getClinic().assignStackToEnvelope(2,NaN)
+  const actualResult = await weiClinic.assignStackToEnvelope(2,NaN)
   const expectedResult = 400
 
   expect(actualResult).toEqual(expectedResult)
@@ -148,7 +148,7 @@ test('Implant Function - When stack is found, avaliable and envelope is not give
 })
 
 test('Implant Function - When stack is found, avaliable and envelope is not given,free envelopes avaliable', async () => {
-       
+  const weiClinic = new WeiClinic()    
   const CorticalStack = {id : 2, realGender : "F", name : "abc", age : "11", idEnvelope: null}
   const Envelope = { id: 1, gender : "F", age : "11", idStack : null }
   mockGetStack.mockReturnValue(CorticalStack)
@@ -156,7 +156,7 @@ test('Implant Function - When stack is found, avaliable and envelope is not give
   mockUpdateEnvelope.mockReturnValue(true)
   mockUpdateStack.mockReturnValue(true)
 
-  const actualResult = await getClinic().assignStackToEnvelope(2,NaN)
+  const actualResult = await weiClinic.assignStackToEnvelope(2,NaN)
   const expectedResult = 204
 
   expect(actualResult).toEqual(expectedResult)
@@ -167,13 +167,13 @@ test('Implant Function - When stack is found, avaliable and envelope is not give
 })
 
 test('Implant Function - When stack is found, avaliable and envelope is given but not found ', async () => {
-       
+  const weiClinic = new WeiClinic()  
   const CorticalStack = {id : 2, realGender : "F", name : "abc", age : "11", idEnvelope: null}
   
   mockGetStack.mockReturnValue(CorticalStack)
   mockGetEnvelope.mockReturnValue(undefined)
 
-  const actualResult = await getClinic().assignStackToEnvelope(2,2)
+  const actualResult = await weiClinic.assignStackToEnvelope(2,2)
   const expectedResult = 404
 
   expect(actualResult).toEqual(expectedResult)
@@ -182,14 +182,14 @@ test('Implant Function - When stack is found, avaliable and envelope is given bu
 })
 
 test('Implant Function - When stack is found, avaliable and envelope is given, found but not avaliable ', async () => {
-       
+  const weiClinic = new WeiClinic()   
   const CorticalStack = {id : 2, realGender : "F", name : "abc", age : "11", idEnvelope: null}
   const Envelope = { id: 2, gender : "F", age : "11", idStack : 2 }
 
   mockGetStack.mockReturnValue(CorticalStack)
   mockGetEnvelope.mockReturnValue(Envelope)
 
-  const actualResult = await getClinic().assignStackToEnvelope(2,2)
+  const actualResult = await weiClinic.assignStackToEnvelope(2,2)
   const expectedResult = 400
 
   expect(actualResult).toEqual(expectedResult)
@@ -198,7 +198,7 @@ test('Implant Function - When stack is found, avaliable and envelope is given, f
 })
 
 test('Implant Function - When stack is found, avaliable and envelope is given, found and avaliable ', async () => {
-       
+  const weiClinic = new WeiClinic()    
   const CorticalStack = {id : 2, realGender : "F", name : "abc", age : "11", idEnvelope: null}
   const Envelope = { id: 2, gender : "F", age : "11", idStack : null }
 
@@ -207,7 +207,7 @@ test('Implant Function - When stack is found, avaliable and envelope is given, f
   mockUpdateEnvelope.mockReturnValue(true)
   mockUpdateStack.mockReturnValue(true)
 
-  const actualResult = await getClinic().assignStackToEnvelope(2,2)
+  const actualResult = await weiClinic.assignStackToEnvelope(2,2)
   const expectedResult = 204
 
   expect(actualResult).toEqual(expectedResult)
@@ -216,7 +216,6 @@ test('Implant Function - When stack is found, avaliable and envelope is given, f
   expect(mockUpdateEnvelope).toHaveBeenCalledWith(2, 2)
   expect(mockUpdateStack).toHaveBeenCalledWith(2, 2)
 })
-
     
     test('Kill Function - When stack is embedded in an Envelope', async () => {
         const weiClinic = new WeiClinic()
