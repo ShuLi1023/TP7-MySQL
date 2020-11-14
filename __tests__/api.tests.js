@@ -13,6 +13,7 @@ beforeEach(() => {
         getData: jest.fn()
     })
 })
+
 const status = 204
 const AGE = "47"
 const GENDER = 'M'
