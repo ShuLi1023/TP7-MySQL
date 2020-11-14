@@ -1,6 +1,6 @@
 import express from 'express'
 import bodyParser from 'body-parser'
-import WeiClinic from './WeiClinic'
+import WeiClinic from './weiClinic'
 
 const app = express()
 

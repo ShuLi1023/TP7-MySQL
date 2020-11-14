@@ -1,4 +1,4 @@
-import WeiClinic from '../WeiClinic'
+import WeiClinic from '../weiClinic'
 
 const mockCreateEnvelope = jest.fn()
 const mockCreateStack = jest.fn()

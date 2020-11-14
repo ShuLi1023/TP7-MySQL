@@ -25,9 +25,9 @@ beforeEach(() => {
 })
 
 const status = 204
-const AGE = "47"
-const GENDER = 'M'
-const NAME = 'Elias Ryker'
+const AGE = 47
+const GENDER = "M"
+const NAME = "Elias Ryker"
 const ResponseBody = [
     {
        id: 1,
@@ -59,8 +59,8 @@ describe('APP Tests', () => {
         
         expect(response.status).toBe(200)
         expect(response.body).toEqual(ResponseBody)
-        expect(create).toHaveBeenCalledTimes(1)
-        expect(create).toHaveBeenCalledWith(GENDER, NAME, AGE)
+        expect(mockCreate).toHaveBeenCalledTimes(1)
+        expect(mockCreate).toHaveBeenCalledWith(GENDER, NAME, AGE)
     })
 
     test('POST remove', async () => {
@@ -70,8 +70,8 @@ describe('APP Tests', () => {
         const response = await  request(app).post('/remove/42').end()
 
         expect(response.status).toBe(status)
-        expect(removeStackFromEnvelope).toBeCalledTimes(1)
-        expect(removeStackFromEnvelope).toHaveBeenCalledWith(42)
+        expect(mockRemove).toBeCalledTimes(1)
+        expect(mockRemove).toHaveBeenCalledWith(42)
     })
 
     test('PUT implant', async () => {
@@ -80,8 +80,8 @@ describe('APP Tests', () => {
         const response = await request(app).put('/implant/7').end()
 
         expect(response.status).toBe(status)
-        expect(assignStackToEnvelope).toBeCalledTimes(1)
-        expect(assignStackToEnvelope).toHaveBeenCalledWith(7,NaN)
+        expect(mockAssign).toBeCalledTimes(1)
+        expect(mockAssign).toHaveBeenCalledWith(7,NaN)
     })
 
     test('POST kill', async () => {
@@ -91,8 +91,8 @@ describe('APP Tests', () => {
         const response = await request(app).post('/kill/42').end()
 
         expect(response.status).toBe(status)
-        expect(killEnvelope).toBeCalledTimes(1)
-        expect(killEnvelope).toHaveBeenCalledWith(42)
+        expect(mockKill).toBeCalledTimes(1)
+        expect(mockKill).toHaveBeenCalledWith(42)
     })
 
     test('DELETE truedeath', async() => {
@@ -102,19 +102,19 @@ describe('APP Tests', () => {
         const response = await request(app).delete('/truedeath/65').end()
 
         expect(response.status).toBe(status)
-        expect(destroy).toBeCalledTimes(1)
-        expect(destroy).toHaveBeenCalledWith(65)
+        expect(mockDestroy).toBeCalledTimes(1)
+        expect(mockDestroy).toHaveBeenCalledWith(65)
     })
 
     test('GET find', async() => {
         mockGetData.mockReturnValue(ResponseBody)
 
-        const response = await request(app).get('/find/44')
+        const response = await request(app).get('/find/1')
 
         expect(response.status).toBe(200)
         expect(response.body).toEqual(ResponseBody)
-        expect(getData).toBeCalledTimes(1)
-        expect(getData).toHaveBeenCalledWith(44)
+        expect(mockGetData).toBeCalledTimes(1)
+        expect(mockGetData).toHaveBeenCalledWith(1)
     })
 
     test('GET not find', async() => {
