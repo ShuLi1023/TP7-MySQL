@@ -96,14 +96,10 @@ class WeiClinic {
 
         if(stack.idEnvelope != null){
             const envelope = await dal.getEnvelope(stack.idEnvelope)
-            return {
-                corticalStack: stack,
-                envelope: envelope
-            }
+            return [envelope,stack]     
         }else if(stack != undefined){
             return stack
         }
-        
     }
 }
 
