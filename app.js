@@ -1,7 +1,6 @@
 import express from 'express'
 import bodyParser from 'body-parser'
 import {getClinic} from './weiClinic'
-//import TypeOrmDal from './typeOrmDal'
 
 const app = express()
 
