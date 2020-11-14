@@ -49,7 +49,7 @@ describe('APP Tests', () => {
         expect(response.status).toBe(200)
         expect(response.body).toEqual(ResponseBody)
         expect(mockCreate).toHaveBeenCalledTimes(1)
-        expect(mockCreate).toHaveBeenCalledWith("M", "Elias Ryker", 47)
+        expect(mockCreate).toHaveBeenCalledWith("M", "Elias Ryker", "47")
     })
 
     test('POST remove', async () => {
