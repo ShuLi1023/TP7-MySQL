@@ -61,19 +61,44 @@ describe('WeiClinic Tests', () => {
         const CorticalStack = {id : 2, realGender : "F", name : "abc", age : "11", idEnvelope: 1}
 
         mockGetStack.mockReturnValue(CorticalStack)
-
         mockUpdateEnvelope.mockReturnValue(true)
         mockUpdateStack.mockReturnValue(true)
-
-        //console.log("Mock Envelope Data = " + mockUpdateEnvelope.mockReturnValue(Envelope))
-        //console.log("Mock Stack Data = " + mockUpdateStack.mockReturnValue(CorticalStack))
 
         const actualResult = await getClinic().removeStackFromEnvelope(2)
         const expectedResult = 204
 
         expect(actualResult).toEqual(expectedResult)
+        expect(mockGetStack).toHaveBeenCalledWith(2)
         expect(mockUpdateEnvelope).toHaveBeenCalledWith(1, null)
         expect(mockUpdateStack).toHaveBeenCalledWith(2, null)
+    })
+
+    test('Remove Function - When stack is not embedded in an Envelope', async () => {
+       
+        const CorticalStack = {id : 2, realGender : "F", name : "abc", age : "11", idEnvelope: null}
+
+        mockGetStack.mockReturnValue(CorticalStack)
+        mockUpdateEnvelope.mockReturnValue(true)
+        mockUpdateStack.mockReturnValue(true)
+
+        const actualResult = await getClinic().removeStackFromEnvelope(2)
+        const expectedResult = 400
+
+        expect(actualResult).toEqual(expectedResult)
+        expect(mockGetStack).toHaveBeenCalledWith(2)
+    })
+
+    test('Remove Function - When stack cannot be found', async () => {
+       
+        mockGetStack.mockReturnValue(undefined)
+        mockUpdateEnvelope.mockReturnValue(true)
+        mockUpdateStack.mockReturnValue(true)
+
+        const actualResult = await getClinic().removeStackFromEnvelope(2)
+        const expectedResult = 400
+
+        expect(actualResult).toEqual(expectedResult)
+        expect(mockGetStack).toHaveBeenCalledWith(2)
     })
 
 })
