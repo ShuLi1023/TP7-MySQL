@@ -4,6 +4,7 @@ const mockCreateEnvelope = jest.fn()
 const mockCreateStack = jest.fn()
 const mockGetEnvelope = jest.fn()
 const mockGetStack = jest.fn()
+const mockGetFreeEnvelope = jest.fn()
 const mockUpdateEnvelope = jest.fn()
 const mockUpdateStack = jest.fn()
 const mockDeleteEnvelope = jest.fn()
@@ -16,6 +17,7 @@ jest.mock('../typeOrmDal', () => {
         createStack : mockCreateStack,
         getEnvelope : mockGetEnvelope,
         getCorticalStack : mockGetStack,
+        getFreeEnvelope : mockGetFreeEnvelope,
         updateEnvelope: mockUpdateEnvelope,
         updateStack : mockUpdateStack,
         deleteEnvelope : mockDeleteEnvelope,
