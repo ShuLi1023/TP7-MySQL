@@ -6,6 +6,8 @@ const mockGetEnvelope = jest.fn()
 const mockGetStack = jest.fn()
 const mockUpdateEnvelope = jest.fn()
 const mockUpdateStack = jest.fn()
+const mockDeleteEnvelope = jest.fn()
+const mockDeleteStack = jest.fn()
 const mockGetData = jest.fn()
 
 jest.mock('../typeOrmDal', () => {
@@ -16,6 +18,8 @@ jest.mock('../typeOrmDal', () => {
         getCorticalStack : mockGetStack,
         updateEnvelope: mockUpdateEnvelope,
         updateStack : mockUpdateStack,
+        deleteEnvelope : mockDeleteEnvelope,
+        deleteStack : mockDeleteStack,
         getData : mockGetData
     }))
 })
@@ -99,6 +103,97 @@ describe('WeiClinic Tests', () => {
 
         expect(actualResult).toEqual(expectedResult)
         expect(mockGetStack).toHaveBeenCalledWith(2)
+    })
+
+    test('Kill Function - When stack is embedded in an Envelope', async () => {
+       
+        const Envelope = { id: 1, gender : "F", age : "11", idStack : 2 }
+
+        mockGetEnvelope.mockReturnValue(Envelope)
+        mockDeleteEnvelope.mockReturnValue(true)
+        mockUpdateStack.mockReturnValue(true)
+
+        const actualResult = await getClinic().killEnvelope(1)
+        const expectedResult = 204
+
+        expect(actualResult).toEqual(expectedResult)
+        expect(mockGetEnvelope).toHaveBeenCalledWith(1)
+        expect(mockDeleteEnvelope).toHaveBeenCalledWith(1)
+        expect(mockUpdateStack).toHaveBeenCalledWith(2, null)
+    })
+
+    test('Kill Function - When Envelope is empty', async () => {
+       
+        const Envelope = { id: 1, gender : "F", age : "11", idStack : null }
+
+        mockGetEnvelope.mockReturnValue(Envelope)
+        mockDeleteEnvelope.mockReturnValue(true)
+
+        const actualResult = await getClinic().killEnvelope(1)
+        const expectedResult = 204
+
+        expect(actualResult).toEqual(expectedResult)
+        expect(mockGetEnvelope).toHaveBeenCalledWith(1)
+        expect(mockDeleteEnvelope).toHaveBeenCalledWith(1)
+        expect(mockUpdateStack).not.toHaveBeenCalled()
+    })
+
+    test('Kill Function - When Envelope does not exist', async () => {
+
+        mockGetEnvelope.mockReturnValue(undefined)
+
+        const actualResult = await getClinic().killEnvelope(1)
+        const expectedResult = 400
+
+        expect(actualResult).toEqual(expectedResult)
+        expect(mockGetEnvelope).toHaveBeenCalledWith(1)
+        expect(mockDeleteEnvelope).not.toHaveBeenCalled()
+        expect(mockUpdateStack).not.toHaveBeenCalled()
+    })
+
+    test('True Death Function - When stack is embedded in an Envelope', async () => {
+       
+        const CorticalStack = {id : 2, realGender : "F", name : "abc", age : "11", idEnvelope: 1}
+
+        mockGetStack.mockReturnValue(CorticalStack)
+        mockDeleteStack.mockReturnValue(true)
+        mockDeleteEnvelope.mockReturnValue(true)
+
+        const actualResult = await getClinic().destroy(2)
+        const expectedResult = 204
+
+        expect(actualResult).toEqual(expectedResult)
+        expect(mockGetStack).toHaveBeenCalledWith(2)
+        expect(mockDeleteEnvelope).toHaveBeenCalledWith(1)
+        expect(mockDeleteStack).toHaveBeenCalledWith(2)
+    })
+
+    test('True Death Function - When stack is not embedded in an Envelope', async () => {
+       
+        const CorticalStack = {id : 2, realGender : "F", name : "abc", age : "11", idEnvelope: null}
+
+        mockGetStack.mockReturnValue(CorticalStack)
+        mockDeleteStack.mockReturnValue(true)
+        const actualResult = await getClinic().destroy(2)
+        const expectedResult = 204
+
+        expect(actualResult).toEqual(expectedResult)
+        expect(mockGetStack).toHaveBeenCalledWith(2)
+        expect(mockDeleteStack).toHaveBeenCalledWith(2)
+        expect(mockDeleteEnvelope).not.toHaveBeenCalled()
+    })
+
+    test('True Death Function - When stack does not exist', async () => {
+
+        mockGetStack.mockReturnValue(undefined)
+        const actualResult = await getClinic().destroy(2)
+        const expectedResult = 400
+
+        expect(actualResult).toEqual(expectedResult)
+        expect(mockGetStack).toHaveBeenCalledWith(2)
+        expect(mockDeleteStack).not.toHaveBeenCalled()
+        expect(mockDeleteEnvelope).not.toHaveBeenCalled()
+
     })
 
 })
